@@ -1,0 +1,106 @@
+<div class="p-10 max-w-5xl mx-auto">
+  <mat-card class="mb-8 p-6 shadow-lg">
+    <div class="flex flex-row gap-4 mb-8">
+      <button mat-icon-button (click)="back()" color="primary">
+            <mat-icon aria-label="Voltar" fontIcon="arrow_back"></mat-icon>
+          </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="update()">
+      <!-- Campo name -->
+      <div class="mb-6">
+        <mat-form-field [hideRequiredMarker]="true" class="w-full">
+          <mat-label>Nome</mat-label>
+          <input matInput
+                id="name"
+                name="name"
+                formControlName="name">
+        </mat-form-field>
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+          <span class="text-red-500 text-sm">
+            Campo obrigatório
+          </span>
+        }
+        @if (form.get('name')?.hasError('minlength') && form.get('name')?.touched) {
+          <span class="text-red-500 text-sm">
+            Esse campo deve ter no mínimo 2 caracteres
+          </span>
+        }
+      </div>
+
+      <!-- Campo amount -->
+      <div class="mb-6">
+        <mat-form-field [hideRequiredMarker]="true" class="w-full">
+          <mat-label>Quantidade</mat-label>
+          <input matInput 
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  formControlName="amount">
+        </mat-form-field>
+        @if (form.get('amount')?.hasError('min') && form.get('amount')?.touched) {
+          <span class="text-red-500 text-sm">
+            Campo deve ser positivo ou zero
+          </span>
+        }
+        @if (form.get('amount')?.hasError('required') && form.get('amount')?.touched) {
+          <span class="text-red-500 text-sm">
+            Campo deve ser positivo ou zero
+          </span>
+        }
+      </div>
+
+      <div *appIfAdmin class="flex gap-4 justify-end">
+        <button mat-flat-button type="submit" color="primary">
+          Salvar Alterações
+        </button>
+
+        <button mat-flat-button color="warn" (click)="delete()">
+          Excluir
+        </button>
+      </div>
+
+    </form>
+  </mat-card>
+
+  <mat-card class="p-6 shadow-lg">
+    <h3 class="text-lg font-bold mb-4">
+      Produtos que utilizam este insumo
+    </h3>
+
+    @if (products.length === 0) {
+      <div class="text-gray-500 mt-4">
+        Nenhum produto utiliza este insumo.
+      </div>
+    } @else {
+      <table mat-table [dataSource]="products" class="w-full">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Produto</th>
+          <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let product">
+            <button mat-icon-button color="primary" (click)="peek(product.id)">
+              <mat-icon aria-label="Exibir detalhes" fontIcon="visibility"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5,10,20]"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    }
+
+  </mat-card>
+
+</div>

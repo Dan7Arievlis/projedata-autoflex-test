@@ -1,0 +1,72 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <mat-card class="w-full max-w-md mx-auto p-8 shadow-xl">
+    <h2 class="text-2xl font-bold text-center mb-6">
+      Login
+    </h2>
+    <form [formGroup]="form">
+        <!-- Campo username -->
+        <div class="mb-8">
+          <mat-form-field [hideRequiredMarker]=false class="w-full">
+            <mat-label>Usuário</mat-label>
+            <input matInput type="text"
+                  id="login"
+                  name="login"
+                  formControlName="login"
+                  required
+            />
+          </mat-form-field>
+          @if (form.get('login')?.hasError('required') && form.get('login')?.touched) {
+            <span class="text-red-500 text-sm">
+              Campo obrigatório
+            </span>
+          }
+        </div>
+
+        <!-- Campo senha -->
+        <div class="mb-4">
+              <mat-form-field  [hideRequiredMarker]=false class="w-full">
+              <mat-label>Senha</mat-label>
+              <input matInput
+                      [type]="hide() ? 'password' : 'text'" 
+                      id="password"
+                      name="password"
+                      formControlName="password"
+                      required
+                      minlength="8"
+              />
+              <button matIconButton
+                      matSuffix
+                      (click)="toggleHide()"
+                      [attr.aria-label]="'Hide password'"
+                      [attr.aria-pressed]="hide()"
+              >
+                <mat-icon class="mr-3">{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+            @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+              <span class="text-red-500 text-sm">
+                Campo obrigatório
+              </span>
+            }
+            @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+              <span class="text-red-500 text-sm">
+                Senha deve ter no mínimo 8 caracteres
+              </span>
+            }
+        </div>
+
+        <div class="flex flex-col items-center gap-5 mx-auto">
+          <button mat-flat-button type="submit" (click)="login()" class="w-40">
+              Log in
+          </button>
+
+          <!-- <button mat-flat-button (click)="loginWithGoogle()">
+              Entrar com o Google
+          </button> -->
+
+          <a class="cursor-pointer hover:underline" routerLink="/auth/register">Ainda não tem uma conta? Cadastre-se</a>
+        </div>
+    </form>
+
+  </mat-card>
+</div>

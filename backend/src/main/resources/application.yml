@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: Autoflex Test
+  output:
+    ansi:
+      enabled: always
+  frontend-url: ${FRONTEND_URL}
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/autoflex-test}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
+lgpd:
+  retention-days: 30
+
+springdoc:
+  override-with-generic-response: false
+
+logging:
+  pattern:
+    console: '%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n'
+  file:
+    name: app.log
+  level:
+    root: warn
+    io:
+      github:
+        dan7arievlis: info
+    org:
+      springframework:
+        web: debug
+        security: warn
+
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  jpa:
+    show-sql: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: homolog
+
+---
+spring:
+  config:
+    activate:
+      on-profile: development

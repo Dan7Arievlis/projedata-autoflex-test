@@ -1,0 +1,114 @@
+<div class="p-10 max-w-5xl mx-auto">
+  <mat-card *appIfAdmin class="mb-8 p-6 shadow-lg">
+    <div class="flex flex-row gap-4">
+      <h1 class="font-bold text-3xl mb-8">Cadastro de insumos</h1>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col md:flex-row lg:flex-row gap-5">
+      <div class="flex flex-col w-full">
+        <div class="flex gap-4 w-full">
+          <!-- Campo name -->
+          <div class="mb-8 w-3/5">
+            <mat-form-field [hideRequiredMarker]=false class="w-full">
+              <mat-label>Nome</mat-label>
+              <input matInput type="text"
+                    id="name"
+                    name="name"
+                    formControlName="name"
+                    required
+              />
+            </mat-form-field>
+            @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+              <span class="text-red-500 text-sm">
+                Campo obrigatório
+              </span>
+            }
+            @if (form.get('name')?.hasError('minlength') && form.get('name')?.touched) {
+              <span class="text-red-500 text-sm">
+                Esse campo deve ter no mínimo 2 caracteres
+              </span>
+            }
+          </div>
+
+          <!-- Campo amount -->
+          <div class="mb-8 w-2/5">
+            <mat-form-field [hideRequiredMarker]=false class="w-full">
+              <mat-label>Quantidade (g)</mat-label>
+              <input matInput type="text"
+                    id="amount"
+                    name="amount"
+                    formControlName="amount"
+                    placeholder="0 g"
+                    required
+              />
+            </mat-form-field>
+            @if (form.get('amount')?.hasError('min') && form.get('amount')?.touched) {
+              <span class="text-red-500 text-sm">
+                Campo deve ser positivo ou zero
+              </span>
+            }
+            @if (form.get('amount')?.hasError('required') && form.get('amount')?.touched) {
+              <span class="text-red-500 text-sm">
+                Campo deve ser positivo ou zero
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button mat-flat-button color="primary" type="submit">
+            Salvar
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </mat-card>
+
+  <mat-card class="p-6 shadow-lg">
+    <form [formGroup]="searchBar" class="flex flex-col md:flex-row lg:flex-row gap-5">
+      <!-- Campo search -->
+      <div class="mb-8 flex flex-col w-full">
+        <mat-form-field>
+          <mat-label>Pesquisar</mat-label>
+          <input matInput type="text"
+                id="search"
+                name="search"
+                formControlName="search"
+              />
+            </mat-form-field>
+          </div>
+      </form>
+
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let input">{{ input.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Quantidade (g) </th>
+        <td mat-cell *matCellDef="let input">{{ input.amount }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let input">
+          <button mat-icon-button color="primary" (click)="edit(input.id)">
+            <mat-icon aria-label="Exibir detalhes" fontIcon="more_vert"></mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5,10,20]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+
+  </mat-card>
+</div>
