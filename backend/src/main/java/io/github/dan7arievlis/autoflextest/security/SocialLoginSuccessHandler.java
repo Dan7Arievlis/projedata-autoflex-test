@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+    @Value("${spring.frontend-url}")
+    private String frontendUrl;
 
     private final UserService userService;
     private final PasswordEncoder encoder;
@@ -42,7 +45,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         String jwt = authProvider.generateToken(customAuth);
 
-        response.sendRedirect("http://localhost:4200/auth/callback?token=" + jwt);
+        response.sendRedirect(frontendUrl + "/auth/callback?token=" + jwt);
 //        super.onAuthenticationSuccess(request, response, authentication);
     }
 

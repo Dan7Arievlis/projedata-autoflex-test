@@ -61,15 +61,19 @@ public class ProductService implements OptionalSpecificationSearch {
                 optSpec(name, ProductSpecs::nameLike)
         ).reduce(Specification.allOf((root, query, cb) -> cb.isTrue(root.get("active"))), Specification::and);
 
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Product> products = repository.findAll(specs, pageable);
-        List<ProductResponseDTO> sortedContent = products.getContent()
-                .stream().map(product ->
-                        mapper.entityToResponse(product, calculateMaxProduction(product), calculateTotalValue(product)))
+        List<Product> products = repository.findAll(specs);
+        List<ProductResponseDTO> sorted = products.stream()
+                .map(product -> mapper.entityToResponse(product, calculateMaxProduction(product), calculateTotalValue(product)))
                 .sorted(Comparator.comparing(ProductResponseDTO::totalValue).reversed())
                 .toList();
 
-        return new PageImpl<>(sortedContent, products.getPageable(), products.getTotalElements());
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, sorted.size());
+
+        List<ProductResponseDTO> pageContent =
+                start > sorted.size() ? List.of() : sorted.subList(start, end);
+
+        return new PageImpl<>(pageContent, PageRequest.of(page, pageSize), sorted.size());
     }
 
     public List<Product> searchProductsById(UUID id) {
