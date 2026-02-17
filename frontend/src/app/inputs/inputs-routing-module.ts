@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     component: InputComponent,
     data: {
-      title: 'Cadastro'
+      title: 'Lista'
     }
   },
   {
