@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface InputProductMapper {
-    @Mapping(source = "product.id", target = "productId")
+    @Mapping(source = "product.id", target = "id")
     @Mapping(source = "input.id", target = "inputId")
     @Mapping(source = "input.name", target = "inputName")
     @Mapping(source = "input.amount", target = "totalAmount")
