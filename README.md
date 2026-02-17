@@ -14,7 +14,7 @@ cd backend && ./mvnw clean package -DskipTests && cd ..
 
 docker compose up --build
 
-* Resetar o banco
+ Resetar o banco
 
 docker compose down -v
 
