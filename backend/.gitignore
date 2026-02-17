@@ -41,6 +41,4 @@ build/
 ### VS Code ###
 .vscode/
 
-app.log
 *.gz
-docker-commands.txt
