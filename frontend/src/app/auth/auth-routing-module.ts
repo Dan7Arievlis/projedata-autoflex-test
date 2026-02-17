@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [guestGuard]
   },
   {
-    path: 'oauth/callback',
+    path: 'callback',
     component: OauthCallbackComponent
   }
 ];

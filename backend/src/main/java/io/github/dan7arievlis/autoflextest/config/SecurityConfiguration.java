@@ -53,7 +53,7 @@ public class SecurityConfiguration {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                     })
                 )
-//                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler))
+                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler))
                 .oauth2ResourceServer(oauth2Rs ->
                         oauth2Rs.jwt(jwt ->
                                 jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())

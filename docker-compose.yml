@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    container_name: autoflex-test
+    environment:
+      POSTGRES_DB: autoflex-test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/dump.sql:/docker-entrypoint-initdb.d/01_init.sql
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"

@@ -15,7 +15,8 @@ export class OauthCallbackComponent {
 
   ngOnInit() {
     const token = this.route.snapshot.queryParamMap.get('token');
-
+    console.log('callback');
+    
     if (token) {
       localStorage.setItem('token', token);
       this.router.navigate(['/']);

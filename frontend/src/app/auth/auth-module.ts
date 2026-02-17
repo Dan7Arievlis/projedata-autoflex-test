@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatAnchor } from "@angular/material/button";
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { MatAnchor } from "@angular/material/button";
     ReactiveFormsModule,
     MatIconModule,
     MatInputModule,
-    MatAnchor
+    MatAnchor,
+    MatDividerModule
 ]
 })
 export class AuthModule { }

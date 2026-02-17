@@ -35,22 +35,22 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         String email = oauth2User.getAttribute("email");
 
         Optional<User> optUser = userService.findByEmail(email);
-        User user = optUser.orElse(registerUser(email));
+        User user = optUser.orElseGet(() -> registerUser(oauth2User));
 
         CustomAuthentication customAuth = new CustomAuthentication(user);
         SecurityContextHolder.getContext().setAuthentication(customAuth);
 
         String jwt = authProvider.generateToken(customAuth);
 
-        response.sendRedirect("http://localhost:4200/oauth/callback?token=" + jwt);
+        response.sendRedirect("http://localhost:4200/auth/callback?token=" + jwt);
 //        super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    private User registerUser(String email) {
+    private User registerUser(OAuth2User oauth) {
         User user;
         user = new User();
-        user.setEmail(email);
-        user.setLogin(email.substring(0, email.indexOf("@")));
+        user.setEmail(oauth.getAttribute("email"));
+        user.setLogin(oauth.getAttribute("name"));
         user.setPassword(encoder.encode(DEFAULT_PASSWORD));
         user.setRoles(List.of("USER"));
         userService.create(user);
