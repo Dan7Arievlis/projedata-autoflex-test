@@ -1,24 +1,31 @@
 services:
   db:
     image: postgres:16
-    container_name: autoflex-test
+    container_name: autoflex-testdb
     environment:
-      POSTGRES_DB: autoflex-test
+      POSTGRES_DB: autoflex-testdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - ./database/dump.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./backend
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - .env
     ports:
       - "8080:8080"
+
 
   frontend:
     build: ./frontend

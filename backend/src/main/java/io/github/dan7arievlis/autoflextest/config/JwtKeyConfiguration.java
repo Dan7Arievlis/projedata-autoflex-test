@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.jwt.*;
 
 import java.security.KeyFactory;
@@ -17,17 +18,10 @@ import java.util.Base64;
 
 @Configuration
 public class JwtKeyConfiguration {
-
-    @Value("${JWT_PUBLIC_KEY}")
-    private String publicKeyValue;
-
-    @Value("${JWT_PRIVATE_KEY}")
-    private String privateKeyValue;
-
     @Bean
     public JwtEncoder jwtEncoder() throws Exception {
-        RSAPublicKey publicKey = getPublicKey();
-        RSAPrivateKey privateKey = getPrivateKey();
+        RSAPublicKey publicKey = publicKey();
+        RSAPrivateKey privateKey = privateKey();
 
         return new NimbusJwtEncoder(
                 new ImmutableJWKSet<>(
@@ -42,18 +36,48 @@ public class JwtKeyConfiguration {
 
     @Bean
     public JwtDecoder jwtDecoder() throws Exception {
-        return NimbusJwtDecoder.withPublicKey(getPublicKey()).build();
+        return NimbusJwtDecoder.withPublicKey(publicKey()).build();
     }
 
-    private RSAPublicKey getPublicKey() throws Exception {
-        byte[] publicBytes = Base64.getDecoder().decode(publicKeyValue);
-        return (RSAPublicKey) KeyFactory.getInstance("RSA")
-                .generatePublic(new X509EncodedKeySpec(publicBytes));
+    @Bean
+    public RSAPrivateKey privateKey() throws Exception {
+        String key = new String(
+                new ClassPathResource("keys/private.pem")
+                        .getInputStream()
+                        .readAllBytes()
+        );
+
+        key = key
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+
+        return (RSAPrivateKey) kf.generatePrivate(spec);
     }
 
-    private RSAPrivateKey getPrivateKey() throws Exception {
-        byte[] privateBytes = Base64.getDecoder().decode(privateKeyValue);
-        return (RSAPrivateKey) KeyFactory.getInstance("RSA")
-                .generatePrivate(new PKCS8EncodedKeySpec(privateBytes));
+    @Bean
+    public RSAPublicKey publicKey() throws Exception {
+        String key = new String(
+                new ClassPathResource("keys/public.pem")
+                        .getInputStream()
+                        .readAllBytes()
+        );
+
+        key = key
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+
+        return (RSAPublicKey) kf.generatePublic(spec);
     }
 }
