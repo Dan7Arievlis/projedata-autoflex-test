@@ -29,15 +29,18 @@
   ```http://localhost:8080/login/oauth2/code/google```
 * Salve o progresso e terá acesso ao *ID do Cliente* e às *Chaves secretas do cliente*, copie cada um dos códigos e cole nos respectivos lugares no arquivo .env
 
+
 2. Build do backend:
 
 ```cd backend && ./mvnw clean package -DskipTests && cd ..```
+
 
 3. Subir o container docker:
 
 ```docker compose up --build```
 
- Resetar o banco
+
+ Resetar o banco:
 
 ```docker compose down -v```
 
