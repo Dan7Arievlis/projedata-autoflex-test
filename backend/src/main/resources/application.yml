@@ -6,13 +6,13 @@ spring:
       enabled: always
   frontend-url: ${FRONTEND_URL}
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/autoflex-test}
-    username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:postgres}
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate.format_sql: true
