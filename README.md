@@ -44,6 +44,10 @@
 
 ```docker compose down -v```
 
+## IMPORTANTE
+Para acessar o site com uma conta de administrador, digite:
+* login: ``admin``
+* senha: ``asdfasdf``
 
 URLs:
 
